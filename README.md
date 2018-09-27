@@ -5,6 +5,8 @@ It can start, shutdown, destory, get the virtual machines list or get the inform
 
 This project is to make it easier for developers to manage virtual machines.
 
+You need install php_ssh2 module to use this manager.
+
 ### 中文 ReadMe
 
 这是一个简单的 Libvirt 虚拟机管理器，使用 PHP 开发。
@@ -12,6 +14,8 @@ This project is to make it easier for developers to manage virtual machines.
 它可以启动、关闭、强制结束或读取虚拟机信息，列出虚拟机列表等。
 
 这个项目是为了让开发者管理虚拟机更简单，更轻松。
+
+你需要安装 PHP_SSH2 模块来使用此管理器。
 
 ### Example code for connect a server / 连接到服务器的示例代码
 
