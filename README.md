@@ -1,4 +1,7 @@
 # Libvirt-Manager
+
+[中文 ReadMe](README_ZH.md) | [ZeroDream](https://www.zerodream.net/)
+
 This is a simple php libvirt manager
 
 It can start, shutdown, destory, get the virtual machines list or get the information for any virtual machine.
@@ -7,17 +10,7 @@ This project is to make it easier for developers to manage virtual machines.
 
 You need install php_ssh2 module to use this manager.
 
-### 中文 ReadMe
-
-这是一个简单的 Libvirt 虚拟机管理器，使用 PHP 开发。
-
-它可以启动、关闭、强制结束或读取虚拟机信息，列出虚拟机列表等。
-
-这个项目是为了让开发者管理虚拟机更简单，更轻松。
-
-你需要安装 PHP_SSH2 模块来使用此管理器。
-
-### Example code for connect a server / 连接到服务器的示例代码
+### Example code for connect a server
 
 ```php
 include("libvirt/libvirt.php");
@@ -31,4 +24,34 @@ The `192.168.3.181` is your server hostname, `22` is your server port, and `/dat
 
 For authenticate, use username and password, the username and password in example code is `root` and `123456`.
 
+### Example code for create a virtual machine
+
+```php
+$Libvirt->createDisk("Test", "qcow2", "30G");
+$Libvirt->createVMXML("Test", 2, 2048576, "/data/libvirt/images/Test/Test.qcow2", "/data/iso/CentOS-7-x86_64-Minimal-1804.iso", "cdrom", "network", "default", $Libvirt->randomMac(), "virbr0", 0, 0, 5902);
+$Libvirt->define("/data/libvirt/Test.xml");
+$Libvirt->setPermission("Test");
+$Libvirt->start("Test");
+```
+#### Create a virtual disk
+```php
+String createDisk ( Name, Format, Size )
+```
+#### create a Virtual Machine xml config file
+The method of createVMXML have 13 args.
+```php
+void createVMXL ( Name, vCPU, Ram, Disk, ISO, Boot Device, Network type, Network name, MAC Address, Network bridge, Bandwidth in, Bandwidth out, VNC Port )
+```
+#### Register the xml config file to system
+```php
+String defind ( XML File Path )
+```
+#### Set execute permission
+```php
+void setPermission ( Name )
+```
+#### Start the virtual machine
+```php
+String start ( Name )
+```
 You can find out more info in `libvirt/libvirt.php`
