@@ -41,7 +41,7 @@ void createVMXL ( Name, vCPU, Ram, Disk, ISO, Boot Device, Network type, Network
 ```
 #### 将虚拟机 XML 配置文件注册到系统
 ```php
-String defind ( XML File Path )
+String define ( XML File Path )
 ```
 #### 设置可执行权限
 ```php
