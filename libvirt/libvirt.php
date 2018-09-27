@@ -343,6 +343,16 @@ class Libvirt {
 		@unlink(__DIR__ . "/{$server}.xml");
 	}
 	
+	/**
+	 *
+	 *	createDisk 创建新的虚拟磁盘
+	 *
+	 *	@param $name	虚拟磁盘名称
+	 *	@param $type	虚拟磁盘类型（raw / qcow2 ...）
+	 *	@param $size	虚拟磁盘容量（GB）
+	 *	@return String	执行结果
+	 *
+	 */
 	public function createDisk($name, $type, $size) {
 		if(!$this->conn) {
 			throw new NoConnectionException();
@@ -351,6 +361,15 @@ class Libvirt {
 		return $this->runCommand("qemu-img create -f {$type} " . $this->libpath . "images/{$name}/{$name}.{$type} {$size}");// $this->runCommand("qemu-img create -f {$type} {$name} {$size}");
 	}
 	
+	/**
+	 *
+	 *	attach_disk 临时挂载磁盘到虚拟机
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $name	虚拟磁盘名称
+	 *	@return String	执行结果
+	 *
+	 */
 	public function attach_disk($server, $name) {
 		if(!$this->conn) {
 			throw new NoConnectionException();
@@ -358,12 +377,27 @@ class Libvirt {
 		return $this->runCommand("virsh attach-disk {$server} " . $this->libpath . "images/{$name} vdb --cache none");
 	}
 	
+	/**
+	 *
+	 *	setPermission 设置虚拟机配置文件以及镜像权限
+	 *
+	 *	@param $name	虚拟机名称
+	 *	@return String	执行结果
+	 *
+	 */
 	public function setPermission($name) {
 		$data = $this->runCommand("chmod -R 777 " . $this->libpath . "images/{$name}/");
 		$data = $this->runCommand("chmod -R 777 " . $this->libpath . "{$name}.xml");
 		return $data;
 	}
 	
+	/**
+	 *
+	 *	randomMac 生成随机网卡 MAC 地址
+	 *
+	 *	@return String	网卡 MAC 地址
+	 *
+	 */
 	public function randomMac() {
 		return "0e:37:6a:" . implode(':', str_split(substr(md5(mt_rand()), 0, 6), 2));
 	}
