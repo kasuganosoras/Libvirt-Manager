@@ -51,4 +51,28 @@ void setPermission ( Name )
 ```php
 String start ( Name )
 ```
+#### 正常停止虚拟机
+```php
+String shutdown ( Name )
+```
+#### 强制停止虚拟机
+如果你的虚拟机出现了问题导致不能使用 shutdown 方法停止时，可以使用此方法强制结束虚拟机，但是可能会丢失数据。
+```php
+String destroy ( Name )
+```
+#### 获得虚拟机列表
+你可以使用此方法获得所有已注册的虚拟机列表，它将会返回一个数组。
+```php
+String getList ()
+```
+#### 获得虚拟机信息
+你可以使用此方法获得任何已注册的虚拟机信息，它将会返回一个数组。
+```php
+String getInfo ( Name )
+```
+#### 导出虚拟机的 XML 配置文件
+此方法可以读取虚拟机的 XML 配置文件并返回
+```php
+String dumpxml ( Name )
+```
 你可以在 `libvirt/libvirt.php` 找到更多信息
