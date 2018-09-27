@@ -20,7 +20,7 @@ $Libvirt->connect("root", "123456");
 ```
 This code will connect to your server using SSH, make sure your server sshd service is running.
 
-The `192.168.3.181` is your server hostname, `22` is your server port, and `/data/libvirt/` is your libvirt images save path.
+The `192.168.3.181` is your server hostname, `22` is your server port, and `/data/libvirt/` is your libvirt data save path.
 
 For authenticate, use username and password, the username and password in example code is `root` and `123456`.
 
