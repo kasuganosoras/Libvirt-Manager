@@ -38,7 +38,7 @@ $Libvirt->start("Test");
 String createDisk ( Name, Format, Size )
 ```
 #### create a Virtual Machine xml config file
-The method of createVMXML have 13 args.
+The method of createVMXML have 13 params.
 ```php
 void createVMXL ( Name, vCPU, Ram, Disk, ISO, Boot Device, Network type, Network name, MAC Address, Network bridge, Bandwidth in, Bandwidth out, VNC Port )
 ```
@@ -59,7 +59,7 @@ String start ( Name )
 String shutdown ( Name )
 ```
 #### Force stop the virtual machine
-if your virtual machine in trouble and can't use shutdown to make if off, you can use this method to force stop it.
+if your virtual machine is in trouble and can't use shutdown to make if off, you can use this method to force stop it.
 ```php
 String destroy ( Name )
 ```
