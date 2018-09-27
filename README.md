@@ -44,7 +44,7 @@ void createVMXL ( Name, vCPU, Ram, Disk, ISO, Boot Device, Network type, Network
 ```
 #### Register the xml config file to system
 ```php
-String defind ( XML File Path )
+String define ( XML File Path )
 ```
 #### Set execute permission
 ```php
@@ -53,5 +53,29 @@ void setPermission ( Name )
 #### Start the virtual machine
 ```php
 String start ( Name )
+```
+#### Stop the virtual machine
+```php
+String shutdown ( Name )
+```
+#### Force stop the virtual machine
+if your virtual machine in trouble and can't use shutdown to make if off, you can use this method to force stop it.
+```php
+String destroy ( Name )
+```
+#### Get the virtual machine list
+You can use this method to get the virtual machine list, It will return an array.
+```php
+String getList ()
+```
+#### Get the virtual machine information
+You can use this method to get any registed virtual machine information, It will return an array.
+```php
+String getInfo ( Name )
+```
+#### Dump the virtual machine xml config file
+This method can get any registered virtual machine xml config file and return.
+```php
+String dumpxml ( Name )
 ```
 You can find out more info in `libvirt/libvirt.php`
