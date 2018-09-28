@@ -132,6 +132,82 @@ class Libvirt {
 	
 	/**
 	 *
+	 *	reboot 重启指定的虚拟机
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@return String	执行结果
+	 *
+	 */
+	public function reboot($server) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh reboot {$server}");
+	}
+	
+	/**
+	 *
+	 *	suspend 暂停指定的虚拟机
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@return String	执行结果
+	 *
+	 */
+	public function suspend($server) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh suspend {$server}");
+	}
+	
+	/**
+	 *
+	 *	resume 恢复指定的虚拟机
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@return String	执行结果
+	 *
+	 */
+	public function resume($server) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh resume {$server}");
+	}
+	
+	/**
+	 *
+	 *	save 将指定的虚拟机状态转储到文件
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $name	文件名
+	 *	@return String	执行结果
+	 *
+	 */
+	public function save($server, $name) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh save {$server} {$name}");
+	}
+	
+	/**
+	 *
+	 *	restore 从文件中恢复虚拟机的状态
+	 *
+	 *	@param $name	文件名
+	 *	@return String	执行结果
+	 *
+	 */
+	public function restore($name) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh restore {$name}");
+	}
+	
+	/**
+	 *
 	 *	define 载入指定的虚拟机配置文件
 	 *
 	 *	@param $xmlfile	XML 文件路径和名称
@@ -363,18 +439,120 @@ class Libvirt {
 	
 	/**
 	 *
-	 *	attach_disk 临时挂载磁盘到虚拟机
+	 *	cloneVM 克隆指定的虚拟机
 	 *
-	 *	@param $server	虚拟机名称
-	 *	@param $name	虚拟磁盘名称
+	 *	@param $sname	源虚拟机名称
+	 *	@param $dname	目标虚拟机名称
+	 *	@param $ddisk	目标虚拟机磁盘文件
 	 *	@return String	执行结果
 	 *
 	 */
-	public function attach_disk($server, $name) {
+	public function cloneVM($sname, $dname, $ddisk = "") {
 		if(!$this->conn) {
 			throw new NoConnectionException();
 		}
-		return $this->runCommand("virsh attach-disk {$server} " . $this->libpath . "images/{$name} vdb --cache none");
+		if($ddisk === "") {
+			$ddisk = $this->libpath . "images/{$dname}/{$dname}.qcow2";
+			$this->runCommand("mkdir " . $this->libpath . "images/{$dname}/");
+		}
+		return $this->runCommand("virt-clone -o {$sname} -n {$dname} --file {$ddisk}");
+	}
+	
+	/**
+	 *
+	 *	attach_disk 临时挂载磁盘到虚拟机
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $name	虚拟磁盘文件名
+	 *	@param $target	虚拟磁盘标签
+	 *	@return String	执行结果
+	 *
+	 */
+	public function attach_disk($server, $name, $target) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh attach-disk {$server} " . $this->libpath . "images/{$name} {$target} --cache none");
+	}
+	
+	/**
+	 *
+	 *	detach_disk 临时卸载虚拟机的磁盘
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $target	虚拟磁盘标签
+	 *	@return String	执行结果
+	 *
+	 */
+	public function detach_disk($server, $target) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh detach-disk {$server} --target {$target}");
+	}
+	
+	/**
+	 *
+	 *	setNetwork 控制虚拟机网卡
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $name	网卡名称
+	 *	@param $status	启用或禁用网卡 true / false
+	 *	@return String	执行结果
+	 *
+	 */
+	public function setNetwork($server, $name, $status = true) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		$status = $status === true ? 'up' : 'down';
+		return $this->runCommand("virsh domif-setlink {$server} {$name} {$status}");
+	}
+	
+	/**
+	 *
+	 *	getNetwork 获取虚拟机网卡列表
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@return Array	虚拟机网卡列表数组
+	 *
+	 */
+	public function getNetwork($server) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		$list = $this->runCommand("virsh domiflist {$server}");
+		$line = explode("\n", $list);
+		$data = Array();
+		$s = 0;
+		for($i = 2; $i < count($line); $i++) {
+			$exp = explode(" ", $line[$i]);
+			$t = 0;
+			foreach($exp as $item) {
+				if($item !== "") {
+					switch($t) {
+						case 0:
+							$data[$s]['Interface'] = $item;
+							break;
+						case 1:
+							$data[$s]['Type'] = $item;
+							break;
+						case 2:
+							$data[$s]['Source'] = $item;
+							break;
+						case 3:
+							$data[$s]['Model'] = $item;
+							break;
+						case 4:
+							$data[$s]['MAC'] = $item;
+							break;
+					}
+					$t++;
+				}
+			}
+			$s++;
+		}
+		return $data;
 	}
 	
 	/**
