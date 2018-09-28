@@ -7,6 +7,8 @@
 
 你需要安装 PHP_SSH2 模块来使用此管理器。
 
+唔...第一次写英文 ReadMe，英文很蹩脚，请不要在意...嘤嘤嘤
+
 ### 连接到服务器的示例代码
 
 ```php
@@ -35,9 +37,9 @@ $Libvirt->start("Test");
 String createDisk ( Name, Format, Size )
 ```
 #### 创建一个虚拟机 XML 配置文件
-The method of createVMXML have 13 args.
+createVMXML 方法一共有 13 个参数
 ```php
-void createVMXL ( Name, vCPU, Ram, Disk, ISO, Boot Device, Network type, Network name, MAC Address, Network bridge, Bandwidth in, Bandwidth out, VNC Port )
+void createVMXML ( Name, vCPU, Ram, Disk, ISO, Boot Device, Network type, Network name, MAC Address, Network bridge, Bandwidth in, Bandwidth out, VNC Port )
 ```
 #### 将虚拟机 XML 配置文件注册到系统
 ```php
@@ -74,5 +76,19 @@ String getInfo ( Name )
 此方法可以读取虚拟机的 XML 配置文件并返回
 ```php
 String dumpxml ( Name )
+```
+#### 克隆现有的虚拟机
+你可以使用此方法复制一个现有的虚拟机
+
+此方法也许需要消耗很长时间，具体视磁盘性能而定，建议加一行代码 `set_time_limit(120)` 以防止脚本超时。
+```php
+String cloneVM ( Name, New name, New disk path )
+```
+#### 设置虚拟机网卡
+此方法可以设置虚拟机的网卡
+
+第三个参数是布尔型的，如果赋值是 true，将会启用网卡，如果赋值是 false，将会禁用网卡。
+```php
+String setNetwork ( Server, Network name, Status )
 ```
 你可以在 `libvirt/libvirt.php` 找到更多信息

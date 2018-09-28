@@ -10,6 +10,8 @@ This project is to make it easier for developers to manage virtual machines.
 
 You need install php_ssh2 module to use this manager.
 
+Maybe this document has some grammatical mistakes, because the author is Chinese :P
+
 ### Example code for connect a server
 
 ```php
@@ -77,5 +79,19 @@ String getInfo ( Name )
 This method can get any registered virtual machine xml config file and return.
 ```php
 String dumpxml ( Name )
+```
+#### Clone an exist virtual machine
+You can use this method to clone a exist virtual machine.
+
+This method may take a long time, you need add a line `set_time_limit(120)` in your code.
+```php
+String cloneVM ( Name, New name, New disk path )
+```
+#### Set the virtual machine network
+This method can control the virtual machine network.
+
+The third param is Boolean type, if you give it a true value, the network will enable, else the network will disable.
+```php
+String setNetwork ( Server, Network name, Status )
 ```
 You can find out more info in `libvirt/libvirt.php`
