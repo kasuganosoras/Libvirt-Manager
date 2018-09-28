@@ -90,7 +90,7 @@ String cloneVM ( Name, New name, New disk path )
 #### Set the virtual machine network
 This method can control the virtual machine network.
 
-The third param is Boolean type, if you give it a true value, the network will going start, else the network will going off.
+The third param is Boolean type, if you give it a true value, the network will enable, else the network will disable.
 ```php
 String setNetwork ( Server, Network name, Status )
 ```
