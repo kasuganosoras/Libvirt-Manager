@@ -421,6 +421,22 @@ class Libvirt {
 	
 	/**
 	 *
+	 *	changeMac 修改指定虚拟机的网卡 MAC
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $newMac	新的网卡 MAC
+	 *
+	 */
+	public function changeMac($server, $newMac) {
+		$data = $this->dumpxml($server);
+		$data = preg_replace("/address='([A-Za-z0-9\:]+)'/", "address='" . $Libvirt->randomMac() . "'", $data);
+		@file_put_contents(__DIR__ . "/{$server}.xml", $data);
+		$this->uploadFile(__DIR__ . "/{$server}.xml", $this->libpath . "/{$server}.xml");
+		@unlink(__DIR__ . "/{$server}.xml");
+	}
+	
+	/**
+	 *
 	 *	createDisk 创建新的虚拟磁盘
 	 *
 	 *	@param $name	虚拟磁盘名称
