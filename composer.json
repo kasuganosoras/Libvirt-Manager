@@ -10,13 +10,13 @@
         }
     ],
     "minimum-stability": "dev",
-	"require": {
+    "require": {
         "php": ">=7.0.0"
     },
-	"autoload": {
+    "autoload": {
         "psr-4": {
             "kasuganosoras\\libvirt-manager\\": "src/kasuganosoras/libvirt-manager"
-		}
-	},
+        }
+    },
     "require": {}
 }
