@@ -2,7 +2,7 @@
     "name": "kasuganosoras/libvirt-manager",
     "description": "A librarie to control the libvirt vm",
     "type": "library",
-    "license": "GPLv3",
+    "license": "GPL-3.0-only",
     "authors": [
         {
             "name": "KasuganoSoras",
