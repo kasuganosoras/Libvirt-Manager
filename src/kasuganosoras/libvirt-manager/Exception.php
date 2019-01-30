@@ -1,4 +1,5 @@
 <?php
+namespace kasuganosoras\libvirt-manager;
 class HostUndefineException extends Exception {
 	
 	public function __toString() {

@@ -1,5 +1,5 @@
 <?php
-include("Exception.php");
+namespace kasuganosoras\libvirt-manager;
 class Libvirt {
 	
 	public $hostname;
@@ -38,7 +38,7 @@ class Libvirt {
 				$this->conn = ssh2_connect($this->hostname, $this->port);
 				ssh2_auth_password($this->conn, $username, $password);
 				if($this->runCommand("whoami") == "") {
-					throw new LoginFailedException();
+					throw new Libvirt\LoginFailedException();
 				}
 			} catch (Exception $e) {
 				die($e->getMessage());
@@ -55,7 +55,7 @@ class Libvirt {
 	 */
 	public function runCommand($data) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		$stream = ssh2_exec($this->conn, $data);
 		stream_set_blocking($stream, true);
@@ -72,7 +72,7 @@ class Libvirt {
 	 */
 	public function getList() {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		$list = $this->runCommand("virsh list --all --name");
 		$list = explode("\n", $list);
@@ -95,7 +95,7 @@ class Libvirt {
 	 */
 	public function start($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh start {$server}");
 	}
@@ -110,7 +110,7 @@ class Libvirt {
 	 */
 	public function destroy($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh destroy {$server}");
 	}
@@ -125,7 +125,7 @@ class Libvirt {
 	 */
 	public function shutdown($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh shutdown {$server}");
 	}
@@ -140,7 +140,7 @@ class Libvirt {
 	 */
 	public function reboot($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh reboot {$server}");
 	}
@@ -155,7 +155,7 @@ class Libvirt {
 	 */
 	public function suspend($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh suspend {$server}");
 	}
@@ -170,7 +170,7 @@ class Libvirt {
 	 */
 	public function resume($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh resume {$server}");
 	}
@@ -186,7 +186,7 @@ class Libvirt {
 	 */
 	public function save($server, $name) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh save {$server} {$name}");
 	}
@@ -201,7 +201,7 @@ class Libvirt {
 	 */
 	public function restore($name) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh restore {$name}");
 	}
@@ -216,7 +216,7 @@ class Libvirt {
 	 */
 	public function define($xmlfile) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh define {$xmlfile}");
 	}
@@ -231,7 +231,7 @@ class Libvirt {
 	 */
 	public function undefine($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh undefine {$server}");
 	}
@@ -246,7 +246,7 @@ class Libvirt {
 	 */
 	public function dumpxml($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh dumpxml {$server}");
 	}
@@ -261,7 +261,7 @@ class Libvirt {
 	 */
 	public function getInfo($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		$info = $this->runCommand("virsh dominfo {$server}");
 		$info = explode("\n", $info);
@@ -450,7 +450,7 @@ class Libvirt {
 	 */
 	public function createDisk($name, $type, $size) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		$this->runCommand("mkdir " . $this->libpath . "images/{$name}/");
 		return $this->runCommand("qemu-img create -f {$type} " . $this->libpath . "images/{$name}/{$name}.{$type} {$size}");// $this->runCommand("qemu-img create -f {$type} {$name} {$size}");
@@ -468,7 +468,7 @@ class Libvirt {
 	 */
 	public function cloneVM($sname, $dname, $ddisk = "") {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		if($ddisk === "") {
 			$ddisk = $this->libpath . "images/{$dname}/{$dname}.qcow2";
@@ -489,7 +489,7 @@ class Libvirt {
 	 */
 	public function attach_disk($server, $name, $target) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh attach-disk {$server} " . $this->libpath . "images/{$name} {$target} --cache none");
 	}
@@ -505,7 +505,7 @@ class Libvirt {
 	 */
 	public function detach_disk($server, $target) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		return $this->runCommand("virsh detach-disk {$server} --target {$target}");
 	}
@@ -522,7 +522,7 @@ class Libvirt {
 	 */
 	public function setNetwork($server, $name, $status = true) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		$status = $status === true ? 'up' : 'down';
 		return $this->runCommand("virsh domif-setlink {$server} {$name} {$status}");
@@ -538,7 +538,7 @@ class Libvirt {
 	 */
 	public function getNetwork($server) {
 		if(!$this->conn) {
-			throw new NoConnectionException();
+			throw new Libvirt\NoConnectionException();
 		}
 		$list = $this->runCommand("virsh domiflist {$server}");
 		$line = explode("\n", $list);
