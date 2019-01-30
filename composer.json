@@ -17,6 +17,5 @@
         "psr-4": {
             "kasuganosoras\\libvirt-manager\\": "src/kasuganosoras/libvirt-manager"
         }
-    },
-    "require": {}
+    }
 }
