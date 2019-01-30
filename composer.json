@@ -9,7 +9,6 @@
             "email": "kasuganosora@tcotp.cn"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0"
     },
