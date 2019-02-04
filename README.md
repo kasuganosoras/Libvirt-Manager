@@ -15,7 +15,8 @@ Maybe this document has some grammatical mistakes, because the author is Chinese
 ### Example code for connect a server
 
 ```php
-include("libvirt/libvirt.php");
+require_once __DIR__ . '/vendor/autoload.php';
+use libvirt_manager\Libvirt;
 $Libvirt = new Libvirt();
 $Libvirt->setHost("192.168.3.181", 22, "/data/libvirt/");
 $Libvirt->connect("root", "123456");
