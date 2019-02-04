@@ -28,6 +28,8 @@ git clone https://github.com/kasuganosoras/Libvirt-Manager
 
 ### Example code for connect a server
 
+The following example code will create a virtual machine called Test and allocate 2 CPU cores, 2 GB of memory to it.
+
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
 use libvirt_manager\Libvirt;
