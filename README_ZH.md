@@ -12,6 +12,12 @@
 
 唔...第一次写英文 ReadMe，英文很蹩脚，请不要在意...嘤嘤嘤
 
+### 安装 Libvirt-Manager
+
+```
+composer require kasuganosoras/libvirt-manager
+```
+
 ### 连接到服务器的示例代码
 
 ```php
