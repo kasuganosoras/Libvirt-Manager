@@ -1,5 +1,5 @@
 <?php
-namespace kasuganosoras\libvirt-manager;
+namespace libvirt_manager;
 class Libvirt {
 	
 	public $hostname;
@@ -38,7 +38,7 @@ class Libvirt {
 				$this->conn = ssh2_connect($this->hostname, $this->port);
 				ssh2_auth_password($this->conn, $username, $password);
 				if($this->runCommand("whoami") == "") {
-					throw new Libvirt\LoginFailedException();
+					throw new LoginFailedException();
 				}
 			} catch (Exception $e) {
 				die($e->getMessage());
@@ -54,13 +54,19 @@ class Libvirt {
 	 *
 	 */
 	public function runCommand($data) {
-		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+		if(!$this->conn || $this->conn === null) {
+			throw new NoConnectionException();
 		}
-		$stream = ssh2_exec($this->conn, $data);
-		stream_set_blocking($stream, true);
-		$stream_out = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
-		return stream_get_contents($stream_out);
+		try {
+			$stream = ssh2_exec($this->conn, $data);
+			stream_set_blocking($stream, true);
+			$stream_out = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
+			$stream_out = stream_get_contents($stream_out);
+		}  catch (Exception $e) {
+			print($e->getMessage());
+			$stream_out = null;
+		}
+		return $stream_out;
 	}
 	
 	/**
@@ -72,7 +78,7 @@ class Libvirt {
 	 */
 	public function getList() {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		$list = $this->runCommand("virsh list --all --name");
 		$list = explode("\n", $list);
@@ -95,7 +101,7 @@ class Libvirt {
 	 */
 	public function start($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh start {$server}");
 	}
@@ -110,7 +116,7 @@ class Libvirt {
 	 */
 	public function destroy($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh destroy {$server}");
 	}
@@ -125,7 +131,7 @@ class Libvirt {
 	 */
 	public function shutdown($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh shutdown {$server}");
 	}
@@ -140,7 +146,7 @@ class Libvirt {
 	 */
 	public function reboot($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh reboot {$server}");
 	}
@@ -155,7 +161,7 @@ class Libvirt {
 	 */
 	public function suspend($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh suspend {$server}");
 	}
@@ -170,7 +176,7 @@ class Libvirt {
 	 */
 	public function resume($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh resume {$server}");
 	}
@@ -186,7 +192,7 @@ class Libvirt {
 	 */
 	public function save($server, $name) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh save {$server} {$name}");
 	}
@@ -201,7 +207,7 @@ class Libvirt {
 	 */
 	public function restore($name) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh restore {$name}");
 	}
@@ -216,7 +222,7 @@ class Libvirt {
 	 */
 	public function define($xmlfile) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh define {$xmlfile}");
 	}
@@ -231,7 +237,7 @@ class Libvirt {
 	 */
 	public function undefine($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh undefine {$server}");
 	}
@@ -246,7 +252,7 @@ class Libvirt {
 	 */
 	public function dumpxml($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh dumpxml {$server}");
 	}
@@ -261,7 +267,7 @@ class Libvirt {
 	 */
 	public function getInfo($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		$info = $this->runCommand("virsh dominfo {$server}");
 		$info = explode("\n", $info);
@@ -450,7 +456,7 @@ class Libvirt {
 	 */
 	public function createDisk($name, $type, $size) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		$this->runCommand("mkdir " . $this->libpath . "images/{$name}/");
 		return $this->runCommand("qemu-img create -f {$type} " . $this->libpath . "images/{$name}/{$name}.{$type} {$size}");// $this->runCommand("qemu-img create -f {$type} {$name} {$size}");
@@ -468,7 +474,7 @@ class Libvirt {
 	 */
 	public function cloneVM($sname, $dname, $ddisk = "") {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		if($ddisk === "") {
 			$ddisk = $this->libpath . "images/{$dname}/{$dname}.qcow2";
@@ -489,7 +495,7 @@ class Libvirt {
 	 */
 	public function attach_disk($server, $name, $target) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh attach-disk {$server} " . $this->libpath . "images/{$name} {$target} --cache none");
 	}
@@ -505,9 +511,40 @@ class Libvirt {
 	 */
 	public function detach_disk($server, $target) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		return $this->runCommand("virsh detach-disk {$server} --target {$target}");
+	}
+	
+	/**
+	 *
+	 *	attach_iso 挂载 ISO 到虚拟机
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $name	ISO 文件名
+	 *	@return String	执行结果
+	 *
+	 */
+	public function attach_iso($server, $name) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh attach-disk {$server} {$name} hdb --type cdrom --mode readonly");
+	}
+	
+	/**
+	 *
+	 *	detach_iso 卸载虚拟机 ISO
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@return String	执行结果
+	 *
+	 */
+	public function detach_iso($server) {
+		if(!$this->conn) {
+			throw new NoConnectionException();
+		}
+		return $this->runCommand("virsh attach-disk {$server} \"\" hdb --type cdrom --mode readonly");
 	}
 	
 	/**
@@ -522,7 +559,7 @@ class Libvirt {
 	 */
 	public function setNetwork($server, $name, $status = true) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		$status = $status === true ? 'up' : 'down';
 		return $this->runCommand("virsh domif-setlink {$server} {$name} {$status}");
@@ -538,7 +575,7 @@ class Libvirt {
 	 */
 	public function getNetwork($server) {
 		if(!$this->conn) {
-			throw new Libvirt\NoConnectionException();
+			throw new NoConnectionException();
 		}
 		$list = $this->runCommand("virsh domiflist {$server}");
 		$line = explode("\n", $list);
@@ -601,6 +638,81 @@ class Libvirt {
 	
 	/**
 	 *
+	 *	changeBoot 修改指定虚拟机的启动设备
+	 *
+	 *	@param $server	虚拟机名称
+	 *	@param $device	设备类型
+	 *
+	 */
+	public function changeBoot($server, $device = "") {
+		$data = @file_get_contents($this->libpath . "/{$server}.xml");
+		if(empty($data)) {
+			return "";
+		}
+		if($device == "") {
+			$device = "hd";
+		}
+		$dom = new DOMDocument();
+		$dom->loadXML($data);
+		$domain = $dom->documentElement;
+		$os = $domain->getElementsByTagName('os')->item(0);
+		$oldboot = $os->getElementsByTagName("boot");
+		foreach($oldboot as $item) {
+			$os->removeChild($item);
+		}
+		$boot = $dom->createElement("boot");
+		$boot->setAttribute('dev', $device);
+		$os->appendChild($boot);
+		$data = $dom->saveXML($dom->documentElement);
+		// 不知道为啥要两次
+		$dom->loadXML($data);
+		$domain = $dom->documentElement;
+		$os = $domain->getElementsByTagName('os')->item(0);
+		$oldboot = $os->getElementsByTagName("boot");
+		foreach($oldboot as $item) {
+			$os->removeChild($item);
+		}
+		$boot = $dom->createElement("boot");
+		$boot->setAttribute('dev', $device);
+		$os->appendChild($boot);
+		$data = $dom->saveXML($dom->documentElement);
+		@file_put_contents(__DIR__ . "/{$server}.xml", $data);
+		$this->uploadFile(__DIR__ . "/{$server}.xml", $this->libpath . "/{$server}.xml");
+		@unlink(__DIR__ . "/{$server}.xml");
+	}
+	
+	/**
+	 *
+	 *	changeBandwidth 修改指定虚拟机的最大带宽速率
+	 *
+	 *	@param $server	 虚拟机名称
+	 *	@param $inbound	 最大下行速率
+	 *  @param $outbound 最大上行速率
+	 *
+	 */
+	public function changeBandwidth($server, $in = 0, $out = 0) {
+		$data = @file_get_contents($this->libpath . "/{$server}.xml");
+		if(empty($data)) {
+			return "";
+		}
+		$dom = new DOMDocument();
+		$dom->loadXML($data);
+		$domain = $dom->documentElement;
+		$devices = $domain->getElementsByTagName('devices')->item(0);
+		$interface = $devices->getElementsByTagName('interface')->item(0);
+		$bandwidth = $interface->getElementsByTagName('bandwidth')->item(0);
+		$inbound = $bandwidth->getElementsByTagName('inbound')->item(0);
+		$outbound = $bandwidth->getElementsByTagName('outbound')->item(0);
+		$inbound->setAttribute("average", $in);
+		$outbound->setAttribute("average", $out);
+		$data = $dom->saveXML($dom->documentElement);
+		@file_put_contents(__DIR__ . "/{$server}.xml", $data);
+		$this->uploadFile(__DIR__ . "/{$server}.xml", $this->libpath . "/{$server}.xml");
+		@unlink(__DIR__ . "/{$server}.xml");
+	}
+	
+	/**
+	 *
 	 *	uploadFile 将本地文件上传到服务器
 	 *
 	 *	@param $local	本地文件和路径
@@ -623,4 +735,25 @@ class Libvirt {
 		}
         @fclose($stream);
     }
+}
+
+class HostUndefineException extends \Exception {
+	
+	public function __toString() {
+		return "Error: You must set a host before use method connect() in " . __FILE__ . ":" . __LINE__;
+	}
+}
+
+class LoginFailedException extends \Exception {
+	
+	public function __toString() {
+		return "Error: Failed login to ssh server in " . __FILE__ . ":" . __LINE__;
+	}
+}
+
+class NoConnectionException extends \Exception {
+	
+	public function __toString() {
+		return "Error: You must connect a host before use this method in " . __FILE__ . ":" . __LINE__;
+	}
 }

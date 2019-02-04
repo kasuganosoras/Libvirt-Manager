@@ -1,6 +1,6 @@
 {
-    "name": "kasuganosoras/libvirt-manager",
-    "description": "A librarie to control the libvirt vm",
+    "name": "kasuganosoras/libvirt_manager",
+    "description": "A library to control the libvirt virtual machine.",
     "type": "library",
     "license": "GPL-3.0-only",
     "authors": [
@@ -9,12 +9,11 @@
             "email": "kasuganosora@tcotp.cn"
         }
     ],
-    "require": {
-        "php": ">=7.0.0"
-    },
-    "autoload": {
+    "minimum-stability": "dev",
+    "require": {},
+	"autoload": {
         "psr-4": {
-            "kasuganosoras\\libvirt-manager\\": "src/kasuganosoras/libvirt-manager"
+            "libvirt_manager\\": "src/"
         }
     }
 }

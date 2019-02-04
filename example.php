@@ -1,7 +1,7 @@
 <?php
 Header("Content-type: text/plain");
-// Include Libvirt libraries
-include("libvirt/libvirt.php");
+require_once __DIR__ . '/vendor/autoload.php';
+use libvirt_manager\Libvirt;
 // Instantiation Libvirt
 $Libvirt = new Libvirt();
 // Connect to 192.168.3.181:22 and set libvirt root at /data/libvirt/
