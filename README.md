@@ -12,6 +12,12 @@ You need install php_ssh2 module to use this manager.
 
 Maybe this document has some grammatical mistakes, because the author is Chinese :P
 
+### Install Libvirt-Manager
+
+```
+composer require kasuganosoras/libvirt-manager
+```
+
 ### Example code for connect a server
 
 ```php
