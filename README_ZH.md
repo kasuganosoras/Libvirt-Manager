@@ -15,7 +15,8 @@
 ### 连接到服务器的示例代码
 
 ```php
-include("libvirt/libvirt.php");
+require_once __DIR__ . '/vendor/autoload.php';
+use libvirt_manager\Libvirt;
 $Libvirt = new Libvirt();
 $Libvirt->setHost("192.168.3.181", 22, "/data/libvirt/");
 $Libvirt->connect("root", "123456");
