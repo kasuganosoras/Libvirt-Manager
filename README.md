@@ -14,8 +14,16 @@ Maybe this document has some grammatical mistakes, because the author is Chinese
 
 ### Install Libvirt-Manager
 
+Use composer
+
 ```
 composer require kasuganosoras/libvirt-manager
+```
+
+Use git
+
+```
+git clone https://github.com/kasuganosoras/Libvirt-Manager
 ```
 
 ### Example code for connect a server
