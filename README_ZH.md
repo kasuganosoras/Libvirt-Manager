@@ -43,6 +43,8 @@ Libvirt Manager 需要通过 SSH 连接到服务器进行操作，请确认你�
 
 ### 创建虚拟机示例代码
 
+下面的示例代码将会创建一个名为 Test 的虚拟机，并且为它分配 2 CPU 核心，2GB 内存。
+
 ```php
 $Libvirt->createDisk("Test", "qcow2", "30G");
 $Libvirt->createVMXML("Test", 2, 2048576, "/data/libvirt/images/Test/Test.qcow2", "/data/iso/CentOS-7-x86_64-Minimal-1804.iso", "cdrom", "network", "default", $Libvirt->randomMac(), "virbr0", 0, 0, 5902);
