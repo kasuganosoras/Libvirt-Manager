@@ -14,8 +14,16 @@
 
 ### 安装 Libvirt-Manager
 
+使用 Composer
+
 ```
 composer require kasuganosoras/libvirt-manager
+```
+
+使用 Git
+
+```
+git clone https://github.com/kasuganosoras/Libvirt-Manager
 ```
 
 ### 连接到服务器的示例代码
