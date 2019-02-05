@@ -28,6 +28,8 @@ git clone https://github.com/kasuganosoras/Libvirt-Manager
 
 ### 连接到服务器的示例代码
 
+Libvirt Manager 需要通过 SSH 连接到服务器进行操作，请确认你的服务器已启用 sshd 服务。
+
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
 use libvirt_manager\Libvirt;
@@ -35,7 +37,6 @@ $Libvirt = new Libvirt();
 $Libvirt->setHost("192.168.3.181", 22, "/data/libvirt/");
 $Libvirt->connect("root", "123456");
 ```
-Libvirt Manager 需要通过 SSH 连接到服务器进行操作，请确认你的服务器已启用 sshd 服务。
 
 在示例代码中，`192.168.3.181` 是服务器地址，`22` 是服务器端口，`/data/libvirt/` 是你希望 Libvirt 使用的数据储存目录。
 
