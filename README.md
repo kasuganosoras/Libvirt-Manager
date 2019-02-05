@@ -28,7 +28,7 @@ git clone https://github.com/kasuganosoras/Libvirt-Manager
 
 ### Example code for connect a server
 
-The following example code will create a virtual machine called Test and allocate 2 CPU cores, 2 GB of memory to it.
+This example code will connect to your server using SSH, make sure your server sshd service is running.
 
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
@@ -37,13 +37,14 @@ $Libvirt = new Libvirt();
 $Libvirt->setHost("192.168.3.181", 22, "/data/libvirt/");
 $Libvirt->connect("root", "123456");
 ```
-This code will connect to your server using SSH, make sure your server sshd service is running.
 
 The `192.168.3.181` is your server hostname, `22` is your server port, and `/data/libvirt/` is your libvirt data save path.
 
 For authenticate, use username and password, the username and password in example code is `root` and `123456`.
 
 ### Example code for create a virtual machine
+
+The following example code will create a virtual machine called Test and allocate 2 CPU cores, 2 GB of memory to it.
 
 ```php
 $Libvirt->createDisk("Test", "qcow2", "30G");
