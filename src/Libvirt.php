@@ -360,11 +360,7 @@ class Libvirt {
 		}
 		
 		// 判断网络类型，选择不同的标签
-		$tag_name = "network";
-		if($network_type !== "network") {
-			$tag_name = "name";
-		}
-		
+		$tag_name = ($network_type !== "network") ? "name" : "network";
 		$template .=
 "        <controller type='usb' index='0' model='piix3-uhci'>
             <alias name='usb'/>
@@ -720,21 +716,33 @@ class Libvirt {
 	 *
 	 */
 	public function uploadFile($local, $remote) {
-        $sftp = ssh2_sftp($this->conn);
-        $stream = @fopen("ssh2.sftp://{$sftp}{$remote}", 'w');
-
-        if (!$stream) {
-            throw new Exception("Could not open file: {$remote}");
+		$sftp = ssh2_sftp($this->conn);
+		$stream = @fopen("ssh2.sftp://{$sftp}{$remote}", 'w');
+		if (!$stream) {
+			throw new Exception("Could not open file: {$remote}");
 		}
-        $data = @file_get_contents($local);
-        if ($data === false) {
-            throw new Exception("Could not open local file: {$local}");
+		$data = @file_get_contents($local);
+		if ($data === false) {
+			throw new Exception("Could not open local file: {$local}");
 		}
-        if (@fwrite($stream, $data) === false) {
-            throw new Exception("Could not send data from file: {$local}");
+		if (@fwrite($stream, $data) === false) {
+			throw new Exception("Could not send data from file: {$local}");
 		}
-        @fclose($stream);
-    }
+		@fclose($stream);
+	}
+	
+	/**
+	 *
+	 *	downloadFile 将远程文件下传到本地
+	 *
+	 *	@param $remote	远程文件和路径
+	 *	@param $local	本地文件和路径
+	 *
+	 */
+	public function downloadFile($remote, $local) {
+		$sftp = ssh2_sftp($this->conn);
+		copy("ssh2.sftp://{$sftp}{$remote}", $local);
+	}
 }
 
 class HostUndefineException extends \Exception {
